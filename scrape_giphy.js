@@ -1,7 +1,6 @@
 const https = require('https');
 const fs = require ('fs');
-const keyword = process.argv[2];
-const root = process.argv[3];
+const [,, keyword, root] = process.argv;
 
 const req = https.get(`https://api.giphy.com/v1/gifs/random?tag=${keyword}&api_key=${process.env.API_KEY}`, (res) => {
 	let body = '';
