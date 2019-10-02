@@ -8,7 +8,6 @@ const req = https.get(`https://api.giphy.com/v1/gifs/random?tag=${keyword}&api_k
 	res.on('data', (chunk) => { body += chunk; });
 	res.on('end', () => {
     body = JSON.parse(body);
-		console.log(`Getting: ${body.data.image_mp4_url}`);
 		const filename = body.data.image_mp4_url.split('/')[4];
 		const file_path = `${root}/${keyword}/${filename}.mp4`
 		const req = https.get(body.data.image_mp4_url, (resp) => {
@@ -16,8 +15,11 @@ const req = https.get(`https://api.giphy.com/v1/gifs/random?tag=${keyword}&api_k
 				if (err && err.code != 'EEXIST') throw 'up'
 				fs.access(file_path, fs.F_OK, (e) => {
 					if (e) {
+						console.log(`Getting: ${body.data.image_mp4_url}`);
 						const file = fs.createWriteStream(file_path);
 						resp.pipe(file);
+					} else {
+						console.log(`Skipping: ${body.data.image_mp4_url}, already exists`);
 					}
 				});
 			});
